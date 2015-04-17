@@ -1,0 +1,81 @@
+﻿@model IEnumerable<UploadMVC.Models.File>
+@using UploadMVC.Models
+
+@{
+    ViewBag.Title = "Просмотр файлов";
+}
+
+<div class="nav" style="border-bottom: 1px solid">
+    <div class="container">
+        <ul class="pull-left">
+            <li><a href="#">Обзор</a></li>
+            <li><a href="/Home/Index">Загрузка</a></li>
+        </ul>
+        <ul class="pull-right">
+            <li><a href="#">Информация</a></li>
+        </ul>
+    </div>
+</div>
+
+<div>
+    <h1>Загруженные файлы</h1>
+    @{
+        string pth = "";
+        string check = "";
+    }
+    @foreach (var item in Model)
+    {
+        check = BrowseHelper.Define(item.Type);
+
+        if (check == "IMAGE")
+        {
+            pth = item.Path;
+        }
+        else
+        {
+            pth = BrowseHelper.NonImageBrowsePath(check);
+        }
+        <div class="col-md-3" id="@item.Id">
+            <div class="thumbnail">
+                <h4 style="height: 19px">@item.Name</h4>
+                <img src="@pth" alt="Cinque Terre" style="min-height: 300px; height: 300px; min-width: 250px; width: 250px">
+                <p>
+                    <textarea id="comment" class="form-control" rows="1" style="width: 250px; resize: none;" readonly>@item.Description</textarea>
+                </p>
+                <button type="button" class="btn btn-danger">Delete</button>
+            </div>
+        </div>
+    }
+
+    <br/>
+</div>
+
+@section scripts
+{
+    <script type="text/javascript">
+        $(document).ready(function() {
+            $(".btn-danger").click(function() {
+                var thumbnail = this.parentElement.parentElement;
+                var url = '/File/Delete/' + thumbnail.id;
+                debugger;
+                $.ajax({
+                    url: url,
+                    dataType: "json",
+                    type: "GET",
+                    contentType: 'application/json; charset=utf-8',
+                    async: true,
+                    processData: false,
+                    cache: false,
+                    success: function(data) {
+                        debugger;
+                        thumbnail.remove();
+                    },
+                    error: function(xhr) {
+                        debugger;
+                        alert('error');
+                    }
+                });
+            });
+        });
+    </script>
+}

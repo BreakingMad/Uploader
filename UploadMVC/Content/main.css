@@ -1,0 +1,90 @@
+﻿.nav a {
+  color: #5a5a5a;
+  font-size: 14px;
+  font-weight: bold;
+  padding: 14px 10px;
+  text-transform: uppercase;
+}
+
+.nav li {
+  display: inline;
+}
+
+.nav .container {
+    margin-top: 10px;
+}
+
+.jumbotron {
+  background-image: url(img/sky.jpg);
+  height: 500px;
+  background-repeat: no-repeat;
+  background-size: cover;
+}
+
+.jumbotron .container {
+  position: relative;
+  top:85px;
+  display: inline-block;
+}
+
+.jumbotron h1 {
+  color: #fff;
+  font-size: 56px;  
+  font-family: 'BebasNeue', sans-serif;
+  font-weight: bold;
+ 
+}
+
+.jumbotron p {
+  font-size: 20px;
+  color: #fff;
+}
+.btn-primary, .fileinput-button {
+  height: 51px;
+  font-size: inherit;
+  font-family: BebasNeue;
+}
+.col-md-3 .thumbnail {
+    margin-top: 20px;
+}
+#description {
+  width: 495px;
+  margin-top: 10px;
+  resize: none;
+}
+#comment {
+  margin-left: 24px;
+  margin-top: 5px;
+}
+.bar {
+    height: 18px;
+    background: green;
+    
+}
+.outerbar {
+    border: 1px gainsboro solid;
+    width: 100%;
+}
+.btn-danger {
+  margin-left: 50px;
+  width: 200px;
+}
+@font-face {
+    font-family: 'BebasNeue';
+    font-style: normal;
+    font-weight: normal;
+    src: url(fonts/bloggersans.ttf);
+}
+@font-face {
+  font-family: 'Shift';
+  font-style: normal;
+  font-weight: normal;
+  src: url(fonts/shift.woff) format("woff");
+}
+@font-face {
+  font-family: 'Shift';
+  font-style: normal;
+  font-weight: bold;
+  src: url(fonts/shift-bold.woff) format("woff");
+}
+

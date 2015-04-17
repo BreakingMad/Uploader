@@ -1,0 +1,117 @@
+﻿@model UploadMVC.Models.File
+@{
+    ViewBag.Title = "Загрузка файлов";
+}
+
+<div class="nav">
+    <div class="container">
+        <ul class="pull-left">
+            <li><a href="/File/Browse">Обзор</a></li>
+            <li><a href="#">Загрузка</a></li>
+        </ul>   
+        <ul class="pull-right">
+            <li><a href="#">Информация</a></li>
+        </ul>
+    </div>
+</div>
+
+<div class="jumbotron">
+    <div class="container">
+        <h1>Загрузка файлов</h1>
+        <p>c использованием jQuery FileUpload plugin. </p>
+    </div>
+    <div class="container pull-right" style="top: -10px">
+        @using (Html.BeginForm("UploadFile", "File", FormMethod.Post, new { enctype = "multipart/form-data" }))
+        {
+            <input type="text" id="tbx-file-path" placeholder="Путь..." />
+            <span class="btn btn-success fileinput-button">
+                <span>Выберите файл...</span>
+                    @Html.TextBoxFor(m => m.FileInstance, new {id = "fu-my-simple-upload", type = "file"})
+            </span>
+            <input type="submit" class="btn btn-primary" id="hl-start-upload" value="Начать загрузку"/>
+            <p>
+                <div class="outerbar">
+                    <div id="progress">
+                        <div class="bar" style="width: 0%;"></div>
+                    </div>
+                </div>
+            </p>
+            <p>@Html.TextAreaFor(m => m.Description, new {id = "description", @class="form-control", rows="2", placeholder="Комментраий"})</p>
+           
+        }
+    </div>
+    
+
+</div> 
+
+
+
+@section scripts{
+    <script type="text/javascript">
+
+        var jqXHRData;
+        $(document).ready(function() {
+
+            'use strict';
+
+            $('#fu-my-simple-upload').fileupload({
+                url: '/File/UploadFile',
+                dataType: 'json',
+                add: function(e, data) {
+                    jqXHRData = data
+                },
+                done: function(event, data) {
+                    if (data.result.isUploaded) {
+                        $("#tbx-file-path").val("");
+                        $("#description").val("");
+                        $(".bar").width("0%");
+                    } else {
+                        alert(data.result.message);
+                    }
+                    alert(data.result.message);
+                },
+                fail: function(event, data) {
+                    if (data.files[0].error) {
+                        alert(data.files[0].error);
+                    }
+                },
+                dropZone: $('#tbx-file-path'),
+                progressall: function(e, data) {
+                    // Handle the progress bar
+                    var progress = parseInt(data.loaded / data.total * 100, 10);
+                    $('#progress .bar').css(
+                        'width',
+                        progress + '%'
+                    );
+                }
+            });
+        });
+
+        $("#hl-start-upload").on('click', function() {
+            if (jqXHRData) {
+                jqXHRData.submit();
+            }
+            return false;
+        });
+
+        $("#fu-my-simple-upload").on('change', function() {
+            $("#tbx-file-path").val(this.files[0].name);
+        });
+
+        $(document).bind('drop dragover', function (e) {
+            e.preventDefault();
+        });
+
+        var dzone = $('#tbx-file-path');
+        dzone[0].ondrop = function (event) {
+            debugger;
+            event.preventDefault();
+            $("#tbx-file-path").val(event.dataTransfer.files[0].name);
+        };
+
+       
+
+    </script>
+}
+
+
