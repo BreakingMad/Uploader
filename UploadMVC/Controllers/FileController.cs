@@ -13,7 +13,7 @@ namespace UploadMVC.Controllers
     {
         
         [HttpPost]
-        public virtual ActionResult UploadFile(File file)
+        public virtual ActionResult UploadFile(File file)  //метод, загружающий файл на сервер
         {
             bool isUploaded = false;
             string message = "File upload failed";
@@ -21,24 +21,24 @@ namespace UploadMVC.Controllers
 
             if (FileInstance != null && FileInstance.ContentLength != 0)
             {
-                string pathForSaving = Server.MapPath("~/Uploads");
-                if (this.CreateFolderIfNeeded(pathForSaving))
+                string pathForSaving = Server.MapPath("~/Uploads"); //записываем путь к папке загрузок на сервере
+                if (this.CreateFolderIfNeeded(pathForSaving)) //создаем папку Uploads, если таковой нет
                 {
                     try
                     {
-                        FileInstance.SaveAs(Path.Combine(pathForSaving, FileInstance.FileName));
+                        FileInstance.SaveAs(Path.Combine(pathForSaving, FileInstance.FileName)); //сохраняем файл на сервере по заданному пути
                         isUploaded = true;
                         message = "File uploaded successfully!";
-                        using (FileContext db = new FileContext())
+                        using (FileContext db = new FileContext())  //открываем подключение к бд
                         {
-                            file.Path = @"/Uploads/" + FileInstance.FileName;
-                            file.ContentLenght = FileInstance.ContentLength;
-                            file.Date = DateTime.Now;
-                            file.Type = Path.GetExtension(FileInstance.FileName);
-                            file.Name = FileInstance.FileName;
+                            file.Path = @"/Uploads/" + FileInstance.FileName; //записываем путь
+                            file.ContentLenght = FileInstance.ContentLength;  //           размер
+                            file.Date = DateTime.Now;                         //           дату загрузки
+                            file.Type = Path.GetExtension(FileInstance.FileName);//        расширение
+                            file.Name = FileInstance.FileName;                //           имя
                             
-                            db.Files.Add(file);
-                            db.SaveChanges();
+                            db.Files.Add(file); //добавляем в бд
+                            db.SaveChanges(); //сохраняем изменения
                             message += "[Added in DB]";
                         }
                     }
@@ -48,24 +48,24 @@ namespace UploadMVC.Controllers
                     }
                 }
             }
-            return Json(new { isUploaded = isUploaded, message = message }, "text/html");
+            return Json(new { isUploaded = isUploaded, message = message }, "text/html"); //возвращем объект в фомате Json который получит клиент
         }
 
-        FileContext _cx = new FileContext();
-        public ActionResult Browse()
+        FileContext _cx = new FileContext();  //октрыаем контекс(подключение) к бд
+        public ActionResult Browse()   //метод, который вызывает представление Browse (страница просмотра текущих файлов)
         {
-            return View(_cx.Files);
+            return View(_cx.Files);    //предаем в представление набор данных
         }
 
         [HttpGet]
-        public ActionResult Delete(int id)
+        public ActionResult Delete(int id)  //метод удаления файла из бд (передаем id файла)
         {
-            File file = _cx.Files.Find(id);
-            _cx.Files.Remove(file);
-            _cx.SaveChanges();
+            File file = _cx.Files.Find(id); //находим файл по id
+            _cx.Files.Remove(file);   //удалеям этот соответсвующую запись из бд
+            _cx.SaveChanges();  //сохраняем измения
             return Json(new { message = "Deleted" }, "text/html", JsonRequestBehavior.AllowGet);
         }
-        private bool CreateFolderIfNeeded(string path)
+        private bool CreateFolderIfNeeded(string path) //создание папки на сервере, если таковой нет
         {
             bool result = true;
             if (!Directory.Exists(path))

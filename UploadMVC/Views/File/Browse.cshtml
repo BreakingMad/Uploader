@@ -25,14 +25,14 @@
     }
     @foreach (var item in Model)
     {
-        check = BrowseHelper.Define(item.Type);
+        check = BrowseHelper.Define(item.Type); //определяем тип файла
 
-        if (check == "IMAGE")
+        if (check == "IMAGE")  //если наш файл - картинка, то на странице просмотра будет она сама
         {
             pth = item.Path;
         }
-        else
-        {
+        else  //если же не, то иконка, соответсвующая расширению
+        { 
             pth = BrowseHelper.NonImageBrowsePath(check);
         }
         <div class="col-md-3" id="@item.Id">
@@ -57,7 +57,6 @@
             $(".btn-danger").click(function() {
                 var thumbnail = this.parentElement.parentElement;
                 var url = '/File/Delete/' + thumbnail.id;
-                debugger;
                 $.ajax({
                     url: url,
                     dataType: "json",
