@@ -26,7 +26,7 @@
             <input type="text" id="tbx-file-path" placeholder="Путь..." />
             <span class="btn btn-success fileinput-button">
                 <span>Выберите файл...</span>
-                    @Html.TextBoxFor(m => m.FileInstance, new {id = "fu-my-simple-upload", type = "file"})
+                    @Html.TextBoxFor(m => m.FileInstance, new {id = "fu-my-simple-upload", type = "file", multiple = true})
             </span>
             <input type="submit" class="btn btn-primary" id="hl-start-upload" value="Начать загрузку"/>
             <p>
@@ -49,16 +49,15 @@
 @section scripts{
     <script type="text/javascript">
 
-        var jqXHRData;
+        var jqXHRData = new Array();
         $(document).ready(function() {
-
-            'use strict';
 
             $('#fu-my-simple-upload').fileupload({
                 url: '/File/UploadFile',
                 dataType: 'json',
-                add: function(e, data) {
-                    jqXHRData = data
+                add: function (e, data) {
+                    jqXHRData.push(data);
+                    debugger;
                 },
                 done: function(event, data) {
                     if (data.result.isUploaded) {
@@ -89,7 +88,11 @@
 
         $("#hl-start-upload").on('click', function() {
             if (jqXHRData) {
-                jqXHRData.submit();
+                debugger;
+                for (var i = 0; i < jqXHRData.length; i++) {
+                    debugger;
+                    jqXHRData[i].submit();
+                }  
             }
             return false;
         });

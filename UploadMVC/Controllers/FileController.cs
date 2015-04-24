@@ -11,43 +11,46 @@ namespace UploadMVC.Controllers
 {
     public class FileController : Controller
     {
-        
+
         [HttpPost]
-        public virtual ActionResult UploadFile(File file)  //метод, загружающий файл на сервер
+        public virtual ActionResult UploadFile(File file) //метод, загружающий файл на сервер
         {
             bool isUploaded = false;
             string message = "File upload failed";
-            HttpPostedFileBase FileInstance = file.FileInstance;
-
-            if (FileInstance != null && FileInstance.ContentLength != 0)
+            foreach (var fileInstance in file.FileInstance)
             {
-                string pathForSaving = Server.MapPath("~/Uploads"); //записываем путь к папке загрузок на сервере
-                if (this.CreateFolderIfNeeded(pathForSaving)) //создаем папку Uploads, если таковой нет
+                if (fileInstance != null && fileInstance.ContentLength != 0)
                 {
-                    try
+                    string pathForSaving = Server.MapPath("~/Uploads"); //записываем путь к папке загрузок на сервере
+                    if (this.CreateFolderIfNeeded(pathForSaving)) //создаем папку Uploads, если таковой нет
                     {
-                        FileInstance.SaveAs(Path.Combine(pathForSaving, FileInstance.FileName)); //сохраняем файл на сервере по заданному пути
-                        isUploaded = true;
-                        message = "File uploaded successfully!";
-                        using (FileContext db = new FileContext())  //открываем подключение к бд
+                        try
                         {
-                            file.Path = @"/Uploads/" + FileInstance.FileName; //записываем путь
-                            file.ContentLenght = FileInstance.ContentLength;  //           размер
-                            file.Date = DateTime.Now;                         //           дату загрузки
-                            file.Type = Path.GetExtension(FileInstance.FileName);//        расширение
-                            file.Name = FileInstance.FileName;                //           имя
-                            
-                            db.Files.Add(file); //добавляем в бд
-                            db.SaveChanges(); //сохраняем изменения
-                            message += "[Added in DB]";
+                            fileInstance.SaveAs(Path.Combine(pathForSaving, fileInstance.FileName));
+                                //сохраняем файл на сервере по заданному пути
+                            isUploaded = true;
+                            message = "File uploaded successfully!";
+                            using (FileContext db = new FileContext()) //открываем подключение к бд
+                            {
+                                file.Path = @"/Uploads/" + fileInstance.FileName; //записываем путь
+                                file.ContentLenght = fileInstance.ContentLength; //           размер
+                                file.Date = DateTime.Now; //           дату загрузки
+                                file.Type = Path.GetExtension(fileInstance.FileName); //        расширение
+                                file.Name = fileInstance.FileName; //           имя
+
+                                db.Files.Add(file); //добавляем в бд
+                                db.SaveChanges(); //сохраняем изменения
+                                message += "[Added in DB]";
+                            }
                         }
-                    }
-                    catch (Exception ex)
-                    {
-                        message = string.Format("File upload failed: {0}", ex.Message);
+                        catch (Exception ex)
+                        {
+                            message = string.Format("File upload failed: {0}", ex.Message);
+                        }
                     }
                 }
             }
+
             return Json(new { isUploaded = isUploaded, message = message }, "text/html"); //возвращем объект в фомате Json который получит клиент
         }
 
