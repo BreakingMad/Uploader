@@ -17,8 +17,8 @@ namespace UploadMVC.Controllers
         {
             bool isUploaded = false;
             string message = "File upload failed";
-            foreach (var fileInstance in file.FileInstance)
-            {
+            var fileInstance = file.FileInstance;
+            
                 if (fileInstance != null && fileInstance.ContentLength != 0)
                 {
                     string pathForSaving = Server.MapPath("~/Uploads"); //записываем путь к папке загрузок на сервере
@@ -49,7 +49,7 @@ namespace UploadMVC.Controllers
                         }
                     }
                 }
-            }
+            
 
             return Json(new { isUploaded = isUploaded, message = message }, "text/html"); //возвращем объект в фомате Json который получит клиент
         }
@@ -65,8 +65,18 @@ namespace UploadMVC.Controllers
         {
             File file = _cx.Files.Find(id); //находим файл по id
             _cx.Files.Remove(file);   //удалеям этот соответсвующую запись из бд
+            RemoveFileFromServer(file); //удаляем файл с сервера
             _cx.SaveChanges();  //сохраняем измения
             return Json(new { message = "Deleted" }, "text/html", JsonRequestBehavior.AllowGet);
+        }
+
+        private void RemoveFileFromServer(File file)  //метод удаления файла  сервера
+        {
+            string fullPath = Request.MapPath("~/Uploads/" + file.Name);
+            if (System.IO.File.Exists(fullPath))
+            {
+                System.IO.File.Delete(fullPath);
+            }
         }
         private bool CreateFolderIfNeeded(string path) //создание папки на сервере, если таковой нет
         {

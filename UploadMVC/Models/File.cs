@@ -16,7 +16,7 @@ namespace UploadMVC.Models
         public DateTime Date { get; set; }  //дата загрузки
 
         [NotMapped]
-        public IEnumerable<HttpPostedFileBase> FileInstance { get; set; } //это свойство не будет заносится в бд (помечено как [NotMapped])
+        public HttpPostedFileBase FileInstance { get; set; } //это свойство не будет заносится в бд (помечено как [NotMapped])
                                                    //хранит сам файл (который бкдет предаваться в запосе от клиента к серверу)
     }
 }

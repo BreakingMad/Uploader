@@ -55,9 +55,15 @@
             $('#fu-my-simple-upload').fileupload({
                 url: '/File/UploadFile',
                 dataType: 'json',
+                sequentialUploads: true,
+                maxFileSize: 300000000, //300 MB
                 add: function (e, data) {
-                    jqXHRData.push(data);
-                    debugger;
+                    jqXHRData.push(data);   // !!!!!!!! ВНИМАНИЕ!!!!!!! 
+                    /*  тут вся тема с запросами 
+                        переменная jqXHRData - это массив, который заполняется файлами когда мы их добавляем 
+                        или прептаскиваем (грубо говоря)
+                        см. ниже
+                   */
                 },
                 done: function(event, data) {
                     if (data.result.isUploaded) {
@@ -86,13 +92,12 @@
             });
         });
 
-        $("#hl-start-upload").on('click', function() {
+        $("#hl-start-upload").on('click', function() {         // !!!!!ВОТ СЮДА!!!!!!
             if (jqXHRData) {
-                debugger;
-                for (var i = 0; i < jqXHRData.length; i++) {
-                    debugger;
-                    jqXHRData[i].submit();
-                }  
+                for (var i = 0; i < jqXHRData.length; i++) {   //Здесь мы проходимся по нашему массиву
+                    jqXHRData[i].submit();                     //И каждый файл отправляем отдельным асинхронным запросом
+                }                                              //при помощи submit()
+                jqXHRData = [];                                //очищаем массив
             }
             return false;
         });
@@ -107,7 +112,6 @@
 
         var dzone = $('#tbx-file-path');
         dzone[0].ondrop = function (event) {
-            debugger;
             event.preventDefault();
             $("#tbx-file-path").val(event.dataTransfer.files[0].name);
         };
