@@ -63,7 +63,8 @@
 }
 .outerbar {
     border: 1px gainsboro solid;
-    width: 100%;
+    width: 650px;
+    display: inline-block;
 }
 .btn-danger {
   margin-left: 50px;

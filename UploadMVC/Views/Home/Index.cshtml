@@ -35,6 +35,7 @@
                         <div class="bar" style="width: 0%;"></div>
                     </div>
                 </div>
+                <span id="progress_val" style="font-size: 20px">0%</span>
             </p>
             <p>@Html.TextAreaFor(m => m.Description, new {id = "description", @class="form-control", rows="2", placeholder="Комментраий"})</p>
            
@@ -70,6 +71,7 @@
                         $("#tbx-file-path").val("");
                         $("#description").val("");
                         $(".bar").width("0%");
+                        $("#progress_val").text("0%");
                     } else {
                         alert(data.result.message);
                     }
@@ -88,6 +90,7 @@
                         'width',
                         progress + '%'
                     );
+                    $('#progress_val').text(progress + '%');
                 }
             });
         });
