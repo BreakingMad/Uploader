@@ -23,22 +23,29 @@
     <div class="container pull-right" style="top: -10px">
         @using (Html.BeginForm("UploadFile", "File", FormMethod.Post, new { enctype = "multipart/form-data" }))
         {
-            <input type="text" id="tbx-file-path" placeholder="Путь..." />
-            <span class="btn btn-success fileinput-button">
-                <span>Выберите файл...</span>
+            <div class="form-holder">
+                <input type="text" id="tbx-file-path" placeholder="Путь..."/>
+                <span class="btn btn-success fileinput-button">
+                    <span>Выберите файл...</span>
                     @Html.TextBoxFor(m => m.FileInstance, new {id = "fu-my-simple-upload", type = "file", multiple = true})
-            </span>
-            <input type="submit" class="btn btn-primary" id="hl-start-upload" value="Начать загрузку"/>
-            <p>
-                <div class="outerbar">
-                    <div id="progress">
-                        <div class="bar" style="width: 0%;"></div>
+                </span>
+                <input type="submit" class="btn btn-primary" id="hl-start-upload" value="Начать загрузку"/>
+                <p>
+                    <div class="outerbar">
+                        <div id="progress">
+                            <div class="bar" style="width: 0%;"></div>
+                        </div>
                     </div>
+                    <span id="progress_val" style="font-size: 20px">0%</span>
+                </p>
+                <p>@Html.TextAreaFor(m => m.Description, new {id = "description", @class = "form-control", rows = "2", placeholder = "Комментраий"})</p>
+            </div>
+            
+          
+                <div class="well hide" id="filelistholder">
                 </div>
-                <span id="progress_val" style="font-size: 20px">0%</span>
-            </p>
-            <p>@Html.TextAreaFor(m => m.Description, new {id = "description", @class="form-control", rows="2", placeholder="Комментраий"})</p>
-           
+            
+            
         }
     </div>
     
@@ -59,6 +66,11 @@
                 sequentialUploads: true,
                 maxFileSize: 300000000, //300 MB
                 add: function (e, data) {
+                  
+                    $('#filelistholder').removeClass('hide');
+                    data.context = $('<div />').text(data.files[0].name).appendTo('#filelistholder');
+                    $('</div><div class="progress"><div class="bar" style="width:0%"></div></div><span id="progress_list" style="font-size: 20px">0%</span>').appendTo(data.context);
+
                     jqXHRData.push(data);   // !!!!!!!! ВНИМАНИЕ!!!!!!! 
                     /*  тут вся тема с запросами 
                         переменная jqXHRData - это массив, который заполняется файлами когда мы их добавляем 
@@ -70,8 +82,9 @@
                     if (data.result.isUploaded) {
                         $("#tbx-file-path").val("");
                         $("#description").val("");
-                        $(".bar").width("0%");
-                        $("#progress_val").text("0%");
+                        data.context.text(data.files[0].name + '... Completed');
+                        $('</div><div class="progress"><div class="bar" style="width:100%"></div></div>').appendTo(data.context);
+                       
                     } else {
                         alert(data.result.message);
                     }
@@ -91,6 +104,11 @@
                         progress + '%'
                     );
                     $('#progress_val').text(progress + '%');
+                },
+                progress: function (e, data) {
+                    var progress = parseInt(data.loaded / data.total * 100, 10);
+                    data.context.find('.bar').css('width', progress + '%');
+                    $('#progress_list').text(progress + '%');
                 }
             });
         });

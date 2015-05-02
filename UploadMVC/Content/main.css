@@ -70,6 +70,10 @@
   margin-left: 50px;
   width: 200px;
 }
+#filelistholder {
+  overflow-y: scroll;
+  height: 250px;
+}
 @font-face {
     font-family: 'BebasNeue';
     font-style: normal;
