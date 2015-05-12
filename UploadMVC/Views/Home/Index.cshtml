@@ -9,9 +9,6 @@
             <li><a href="/File/Browse">Обзор</a></li>
             <li><a href="#">Загрузка</a></li>
         </ul>   
-        <ul class="pull-right">
-            <li><a href="#">Информация</a></li>
-        </ul>
     </div>
 </div>
 
@@ -63,7 +60,7 @@
             $('#fu-my-simple-upload').fileupload({
                 url: '/File/UploadFile',
                 dataType: 'json',
-                sequentialUploads: true,
+                sequentialUploads: false,
                 maxFileSize: 300000000, //300 MB
                 add: function (e, data) {
                   
@@ -86,13 +83,13 @@
                         $('</div><div class="progress"><div class="bar" style="width:100%"></div></div>').appendTo(data.context);
                        
                     } else {
-                        alert(data.result.message);
+                        console.log(data.result.message);
                     }
-                    alert(data.result.message);
+                    console.log(data.result.message);
                 },
                 fail: function(event, data) {
                     if (data.files[0].error) {
-                        alert(data.files[0].error);
+                        console.log(data.files[0].error);
                     }
                 },
                 dropZone: $('#tbx-file-path'),
