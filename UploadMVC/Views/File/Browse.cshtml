@@ -25,13 +25,13 @@
     }
     @foreach (var item in Model)
     {
-        check = BrowseHelper.Define(item.Type); //определяем тип файла
+        check = BrowseHelper.Define(item.Type); 
 
-        if (check == "IMAGE")  //если наш файл - картинка, то на странице просмотра будет она сама
+        if (check == "IMAGE") 
         {
             pth = item.Path;
         }
-        else  //если же не, то иконка, соответсвующая расширению
+        else 
         { 
             pth = BrowseHelper.NonImageBrowsePath(check);
         }
@@ -66,11 +66,9 @@
                     processData: false,
                     cache: false,
                     success: function(data) {
-                        debugger;
                         thumbnail.remove();
                     },
                     error: function(xhr) {
-                        debugger;
                         alert('error');
                     }
                 });

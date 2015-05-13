@@ -5,18 +5,18 @@ using System.Web;
 
 namespace UploadMVC.Models
 {
-    public class File    //модель файла (соответсвует таблице в бд)
+    public class File   
     {
         public int Id { get; set; }
-        public string Path { get; set; }  //путь на сервере, где будет лежать файл
-        public int ContentLenght { get; set;}  //размер файла
-        public string Type { get; set; } //разрешение/тип файла
-        public string Description { get; set; } //описание/комментраий
-        public string Name { get; set; } //имя файла
-        public DateTime Date { get; set; }  //дата загрузки
+        public string Path { get; set; }
+        public int ContentLenght { get; set;}
+        public string Type { get; set; } 
+        public string Description { get; set; } 
+        public string Name { get; set; } 
+        public DateTime Date { get; set; }  
 
         [NotMapped]
-        public HttpPostedFileBase FileInstance { get; set; } //это свойство не будет заносится в бд (помечено как [NotMapped])
-                                                   //хранит сам файл (который бкдет предаваться в запосе от клиента к серверу)
+        public HttpPostedFileBase FileInstance { get; set; } 
+                                                  
     }
 }

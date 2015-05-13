@@ -67,13 +67,7 @@
                     $('#filelistholder').removeClass('hide');
                     data.context = $('<div />').text(data.files[0].name).appendTo('#filelistholder');
                     $('</div><div class="progress"><div class="bar" style="width:0%"></div></div><span id="progress_list" style="font-size: 20px">0%</span>').appendTo(data.context);
-
-                    jqXHRData.push(data);   // !!!!!!!! ВНИМАНИЕ!!!!!!! 
-                    /*  тут вся тема с запросами 
-                        переменная jqXHRData - это массив, который заполняется файлами когда мы их добавляем 
-                        или прептаскиваем (грубо говоря)
-                        см. ниже
-                   */
+                    jqXHRData.push(data);  
                 },
                 done: function(event, data) {
                     if (data.result.isUploaded) {
@@ -110,12 +104,12 @@
             });
         });
 
-        $("#hl-start-upload").on('click', function() {         // !!!!!ВОТ СЮДА!!!!!!
+        $("#hl-start-upload").on('click', function() {         
             if (jqXHRData) {
-                for (var i = 0; i < jqXHRData.length; i++) {   //Здесь мы проходимся по нашему массиву
-                    jqXHRData[i].submit();                     //И каждый файл отправляем отдельным асинхронным запросом
-                }                                              //при помощи submit()
-                jqXHRData = [];                                //очищаем массив
+                for (var i = 0; i < jqXHRData.length; i++) {   
+                    jqXHRData[i].submit();                     
+                }                                              
+                jqXHRData = [];                               
             }
             return false;
         });

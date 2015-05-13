@@ -5,7 +5,7 @@ using System.Web;
 
 namespace UploadMVC.Models
 {
-    public class BrowseHelper  //класс, который используется для определения расширения файла и сопостовления с ним соответсвущей картинки
+    public class BrowseHelper  
     {
         public static String Define(String extension)
         {
